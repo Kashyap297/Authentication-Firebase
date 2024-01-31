@@ -8,21 +8,21 @@ import { app } from '../firebase'
 // import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 const Header = () => {
-    
+
     const auth = getAuth(app)
     const { login, setLogin } = useContext(authData)
     console.log(login);
     const { logedUser, setLogedUser } = useContext(authData)
     const navigate = useNavigate()
 
-    const handleLogOut = () =>{
+    const handleLogOut = () => {
         signOut(auth)
-        .then(()=>{
-            setLogin(false)
-            setLogedUser(null)
-        }).catch((err)=>{
-            console.log(err);
-        })
+            .then(() => {
+                setLogin(false)
+                setLogedUser(null)
+            }).catch((err) => {
+                console.log(err);
+            })
     }
 
     return (

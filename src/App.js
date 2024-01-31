@@ -16,12 +16,12 @@ function App() {
   const [login, setLogin] = useState(false)
   const [logedUser, setLogedUser] = useState(null)
 
+  const auth = getAuth(app)
   useEffect(() => {
-    const auth = getAuth(app)
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log(user.displayName);
         setLogin(true)
+        console.log(user.displayName);
         setLogedUser(user.displayName)
       } else {
         setLogin(false);
