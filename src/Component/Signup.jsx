@@ -4,7 +4,7 @@ import { authData } from '../App'
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, signInWithPopup } from 'firebase/auth';
 import { app } from '../firebase';
 import Swal from 'sweetalert2';
 
@@ -44,6 +44,8 @@ const Signup = () => {
         }
         if (input.password.trim() === "") {
             errors.password = "Invalid Password*"
+        } else if (input.password.length < 6) {
+            errors.password = "Atleast 6 Character*"
         }
         return errors
     }
@@ -59,9 +61,33 @@ const Signup = () => {
         setErrors(validate)
         const check = Object.keys(validate)
         if (check.length < 1) {
+            signUpUser()
             setInput({ name: '', email: '', password: '' })
         }
 
+    }
+    console.log(logedUser);
+
+    const signUpUser = () => {
+        createUserWithEmailAndPassword(auth, input.email, input.password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                setLogedUser(input.name);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                if (errorCode.includes('email')) {
+                    Swal.fire({
+                        title: "Registered User !",
+                        text: "Redirecting our Login page",
+                        icon: "info",
+                        showConfirmButton: false,
+                        timer: 1700
+                    });
+                    navigate('/login')
+                }
+                // console.log(error);
+            });
     }
 
     // googleAuth
@@ -78,8 +104,8 @@ const Signup = () => {
                 setLogin(true)
                 setLogedUser(result.user.displayName)
                 navigate('/')
-            }).catch(() => {
-
+            }).catch((err) => {
+                console.log(err);
             })
     }
 
