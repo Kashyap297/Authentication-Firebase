@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2'
-import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+import { GithubAuthProvider, GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { app, auth } from '../firebase';
 // import { initializeApp } from 'firebase/app';
 
@@ -15,12 +15,25 @@ const Login = () => {
     const auth = getAuth(app)
     // const { users, setUsers } = useContext(authData)
     const { login, setLogin } = useContext(authData)
-    const {logedUser, setLogedUser} = useContext(authData)
+    const { logedUser, setLogedUser } = useContext(authData)
 
     const navigate = useNavigate()
 
     const [input, setInput] = useState({ email: '', password: '' })
     const [errors, setErrors] = useState({})
+
+    useEffect(() => {
+        if (logedUser) {
+            Swal.fire({
+                title: "Already Login !",
+                text: "Visit our home page",
+                icon: "info",
+                showConfirmButton: false,
+                timer: 1700
+            });
+            navigate('/')
+        }
+    }, [logedUser])
 
     const handleChange = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value })
@@ -54,6 +67,13 @@ const Login = () => {
     const handleGoogleLogin = () => {
         signInWithPopup(auth, provider)
             .then((result) => {
+                Swal.fire({
+                    title: "Login Successfully !",
+                    text: "Visit our home page...",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1700
+                });
                 setLogin(true)
                 setLogedUser(result.user.displayName)
                 navigate('/')
@@ -88,7 +108,7 @@ const Login = () => {
                                 <p className='text-center mt-3 mb-0'>Don't have an account ? <Link to={"/signup"} className="text-primary fw-bold w-100">Sign Up</Link></p>
                                 <p className='text-center text-secondary mt-2'>------ Or ------</p>
                                 <div className='btn btn-outline-dark w-100' onClick={handleGoogleLogin}><i className="fa-brands fa-google me-2"></i>Login with Google</div>
-                                <div className='btn btn-outline-dark mt-3 w-100'><i className="fa-brands fa-github me-2"></i>Login with Git-Hub</div>
+                                {/* <div className='btn btn-outline-dark mt-3 w-100' onClick={handleGitHubLogin}><i className="fa-brands fa-github me-2"></i>Login with Git-Hub</div> */}
                             </form>
                         </div>
                     </div>

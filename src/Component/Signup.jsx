@@ -6,18 +6,32 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import { app } from '../firebase';
+import Swal from 'sweetalert2';
 
 const Signup = () => {
 
     const provider = new GoogleAuthProvider();
     const auth = getAuth(app)
     const { login, setLogin } = useContext(authData)
-    const {logedUser, setLogedUser} = useContext(authData)
-    
+    const { logedUser, setLogedUser } = useContext(authData)
+
     // const { users, setUsers } = useContext(authData)
     const [input, setInput] = useState({ name: '', email: '', password: '' })
     const [errors, setErrors] = useState({})
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if (logedUser) {
+            Swal.fire({
+                title: "Already Login !",
+                text: "Visit our home page",
+                icon: "info",
+                showConfirmButton: false,
+                timer: 1700
+            });
+            navigate('/')
+        }
+    }, [logedUser])
 
     const checkValidation = (input) => {
         const errors = {}
@@ -54,6 +68,13 @@ const Signup = () => {
     const handleGoogleLogin = () => {
         signInWithPopup(auth, provider)
             .then((result) => {
+                Swal.fire({
+                    title: "Login Successfully !",
+                    text: "Visit our home page...",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1700
+                });
                 setLogin(true)
                 setLogedUser(result.user.displayName)
                 navigate('/')
@@ -93,7 +114,7 @@ const Signup = () => {
                                 <p className='text-center mt-3 mb-0'>Already have an account? <Link to={"/login"} className="text-primary fw-bold">Login </Link></p>
                                 <p className='text-center text-secondary mt-2'>------ Or ------</p>
                                 <div className='btn btn-outline-dark w-100' onClick={handleGoogleLogin}><i className="fa-brands fa-google me-2"></i>Login with Google</div>
-                                <div className='btn btn-outline-dark mt-3 w-100'><i className="fa-brands fa-github me-2"></i>Login with Git-Hub</div>
+                                {/* <div className='btn btn-outline-dark mt-3 w-100' onClick={handleGitHubLogin}><i className="fa-brands fa-github me-2"></i>Login with Git-Hub</div> */}
                             </form>
                         </div>
                     </div>
