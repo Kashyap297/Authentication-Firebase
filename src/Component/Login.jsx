@@ -5,10 +5,15 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2'
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+import { app, auth } from '../firebase';
+// import { initializeApp } from 'firebase/app';
 
 const Login = () => {
 
-    const { users, setUsers } = useContext(authData)
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth(app)
+    // const { users, setUsers } = useContext(authData)
     const { login, setLogin } = useContext(authData)
     const {logedUser, setLogedUser} = useContext(authData)
 
@@ -45,6 +50,18 @@ const Login = () => {
         }
     }
 
+    // googleAuth
+    const handleGoogleLogin = () => {
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                setLogin(true)
+                setLogedUser(result.user.displayName)
+                navigate('/')
+            }).catch(() => {
+
+            })
+    }
+
     return (
         <>
 
@@ -70,7 +87,7 @@ const Login = () => {
                                 </div>
                                 <p className='text-center mt-3 mb-0'>Don't have an account ? <Link to={"/signup"} className="text-primary fw-bold w-100">Sign Up</Link></p>
                                 <p className='text-center text-secondary mt-2'>------ Or ------</p>
-                                <div className='btn btn-outline-dark w-100'><i className="fa-brands fa-google me-2"></i>Login with Google</div>
+                                <div className='btn btn-outline-dark w-100' onClick={handleGoogleLogin}><i className="fa-brands fa-google me-2"></i>Login with Google</div>
                                 <div className='btn btn-outline-dark mt-3 w-100'><i className="fa-brands fa-github me-2"></i>Login with Git-Hub</div>
                             </form>
                         </div>
