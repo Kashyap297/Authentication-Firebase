@@ -11,7 +11,7 @@ const Header = () => {
 
     const auth = getAuth(app)
     const { login, setLogin } = useContext(authData)
-    console.log(login);
+    // console.log(login);
     const { logedUser, setLogedUser } = useContext(authData)
     const navigate = useNavigate()
 

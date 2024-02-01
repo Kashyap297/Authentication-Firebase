@@ -23,7 +23,7 @@ const Login = () => {
     const [errors, setErrors] = useState({})
 
     useEffect(() => {
-        if (logedUser) {
+        if (login) {
             Swal.fire({
                 title: "Already Login !",
                 text: "Visit our home page",
@@ -32,8 +32,8 @@ const Login = () => {
                 timer: 1700
             });
             navigate('/')
-        }
-    }, [logedUser])
+        }   
+    }, [login])
 
     const handleChange = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value })

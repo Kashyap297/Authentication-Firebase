@@ -14,14 +14,14 @@ const Signup = () => {
     const auth = getAuth(app)
     const { login, setLogin } = useContext(authData)
     const { logedUser, setLogedUser } = useContext(authData)
-
+    console.log(login);
     // const { users, setUsers } = useContext(authData)
     const [input, setInput] = useState({ name: '', email: '', password: '' })
     const [errors, setErrors] = useState({})
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (logedUser) {
+        if (login) {
             Swal.fire({
                 title: "Already Login !",
                 text: "Visit our home page",
@@ -31,7 +31,7 @@ const Signup = () => {
             });
             navigate('/')
         }   
-    }, [logedUser])
+    }, [login])
 
     const checkValidation = (input) => {
         const errors = {}
@@ -66,7 +66,7 @@ const Signup = () => {
         }
 
     }
-    console.log(logedUser);
+    // console.log(logedUser);
 
     const signUpUser = () => {
         createUserWithEmailAndPassword(auth, input.email, input.password)
@@ -81,7 +81,7 @@ const Signup = () => {
                 });
                 setLogin(true)
                 navigate('/')
-                // setLogedUser(input.name);
+                // setLogedUser(user);
             })
             .catch((error) => {
                 const errorCode = error.code;

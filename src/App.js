@@ -21,7 +21,7 @@ function App() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setLogin(true)
-        console.log(user.displayName);
+        // console.log(user.displayName);
         setLogedUser(user.displayName)
       } else {
         setLogin(false);
