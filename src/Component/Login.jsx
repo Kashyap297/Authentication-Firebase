@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2'
-import { GithubAuthProvider, GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+import { GithubAuthProvider, GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { app, auth } from '../firebase';
 // import { initializeApp } from 'firebase/app';
 
@@ -47,6 +47,8 @@ const Login = () => {
         }
         if (input.password.trim() === "") {
             errors.password = "Invalid Password*"
+        } else if (input.password.length < 6) {
+            errors.password = 'Atleast 6 Character*'
         }
         return errors
     }
@@ -59,9 +61,41 @@ const Login = () => {
         const check = Object.keys(validate)
 
         if (check.length < 1) {
+            loginUser()
             setInput({ email: '', password: '' })
         }
     }
+
+    // password login
+
+    const loginUser = () => {
+        signInWithEmailAndPassword(auth, input.email, input.password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                Swal.fire({
+                    title: "Login Successfully !",
+                    text: "Visit our home page...",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1700
+                });
+                setLogin(true)
+                navigate('/')
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorMessage);
+                console.log(errorCode);
+                Swal.fire({
+                    title: "Invalid User Or Password  !",
+                    text: "Try Again",
+                    icon: "error",
+                    showConfirmButton: false,
+                    timer: 1700
+                });
+            });
+    }       
 
     // googleAuth
     const handleGoogleLogin = () => {
@@ -77,8 +111,8 @@ const Login = () => {
                 setLogin(true)
                 setLogedUser(result.user.displayName)
                 navigate('/')
-            }).catch(() => {
-
+            }).catch((error) => {
+                console.log(error);
             })
     }
 

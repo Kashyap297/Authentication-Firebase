@@ -30,15 +30,15 @@ const Signup = () => {
                 timer: 1700
             });
             navigate('/')
-        }
+        }   
     }, [logedUser])
 
     const checkValidation = (input) => {
         const errors = {}
 
-        if (input.name.trim() === "") {
-            errors.name = "Invalid Name*"
-        }
+        // if (input.name.trim() === "") {
+        //     errors.name = "Invalid Name*"
+        // }
         if (input.email.trim() === "") {
             errors.email = "Invalid Email*"
         }
@@ -72,7 +72,16 @@ const Signup = () => {
         createUserWithEmailAndPassword(auth, input.email, input.password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                setLogedUser(input.name);
+                Swal.fire({
+                    title: "Login Successfully !",
+                    text: "Visit our home page...",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1700
+                });
+                setLogin(true)
+                navigate('/')
+                // setLogedUser(input.name);
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -118,11 +127,11 @@ const Signup = () => {
                         <div className="col-4">
                             <form action="" className='shadow-lg bor-rad p-4 bg-light' onSubmit={handleSignUp}>
                                 <h1 className='text-center text-secondary'>Sign Up</h1>
-                                <div className="d-flex justify-content-between align-items-center">
+                                {/* <div className="d-flex justify-content-between align-items-center">
                                     <label htmlFor="" className='fw-bold my-2 lightslategrey'>UserName : </label>
                                     <span className='text-danger fs-6 fw-bold '>{errors.name}</span>
                                 </div>
-                                <input type="text" className='w-100 form-control' placeholder='Enter Name' name='name' value={input.name} onChange={handleChange} />
+                                <input type="text" className='w-100 form-control' placeholder='Enter Name' name='name' value={input.name} onChange={handleChange} /> */}
 
                                 <div className="d-flex justify-content-between align-items-center">
                                     <label htmlFor="" className='fw-bold my-2 lightslategrey'>Email-ID : </label>
